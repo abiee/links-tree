@@ -1,9 +1,8 @@
 import events from 'events';
 import url from 'url';
 import _ from 'lodash';
+import config from '../config';
 import LinkExtractor from './LinkExtractor';
-
-var DEFAULT_DEPTH = 2;
 
 export default class LinksCrawler {
   constructor(urlRoot, crawler) {
@@ -14,7 +13,7 @@ export default class LinksCrawler {
 
   start(depth) {
     var eventEmitter = new events.EventEmitter();
-    depth = depth || DEFAULT_DEPTH;
+    depth = depth || config.defaultDepth;
 
     this.pendingUrlsToFollow = 1;
     this.pickedUrls = [this.urlRoot];
