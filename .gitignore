@@ -36,3 +36,6 @@ bower_components
 ### Yeoman ###
 dist
 test/temp
+
+### Server ###
+server/dist

@@ -20,7 +20,6 @@ var AUTOPREFIXER_BROWSERS = [
   'bb >= 10'
 ];
 
-
 // Create a Webpack compiler for development
 var DevWebpackCompiler = (function() {
   var devCompiler;
@@ -106,7 +105,7 @@ gulp.task('html', ['styles'], function () {
 // Clean output directory and cached images
 gulp.task('clean', function (callback) {
   var del = require('del')
-  del(['.tmp', 'dist'], function () {
+  del(['.tmp', 'dist', 'server/dist'], function () {
     $.cache.clearAll(callback);
   });
 });
@@ -130,6 +129,13 @@ gulp.task('connect', ['styles'], function () {
     .on('listening', function () {
       console.log('Started connect web server on http://localhost:9000');
     });
+});
+
+// Compile express server to ECMAScript 5
+gulp.task('server:build', function() {
+  return gulp.src('server/src/*.js')
+    .pipe($.babel({blacklist: ['useStrict'], modules: 'common'}))
+    .pipe(gulp.dest('server/dist'));
 });
 
 // Minify and compile handlebars templates
@@ -202,7 +208,7 @@ gulp.task('test', function(callback) {
 });
 
 // Run development server environmnet
-gulp.task('serve', ['webpack', 'connect', 'watch'], function () {
+gulp.task('serve', ['webpack', 'run:server', 'connect', 'watch'], function () {
   require('opn')('http://localhost:9000');
 });
 
@@ -218,13 +224,23 @@ gulp.task('watch', ['connect'], function () {
     'app/images/**/*'
   ]).on('change', $.livereload.changed);
 
+  gulp.watch('server/src/**/*.js', ['server:build']);
   gulp.watch('app/scripts/**/*.js', ['webpack']);
   gulp.watch('app/scripts/**/*.hbs', ['webpack']);
   gulp.watch('app/styles/**/*.less', ['styles']);
 });
 
+// Watch for changes on server files
+gulp.task('run:server', ['server:build'], function() {
+  $.nodemon({
+    script: 'server/dist/server.js',
+    watch: ['server/dist'],
+    ignore: ['node_modules']
+  });
+});
+
 // Build the project for distribution
-gulp.task('build', ['jshint', 'webpack:build', 'html', 'images', 'fonts', 'extras'], function () {
+gulp.task('build', ['jshint', 'webpack:build', 'server:build', 'html', 'images', 'fonts', 'extras'], function () {
   var size = $.size({title: 'build', gzip: true })
   return gulp.src('dist/**/*.js')
     .pipe(size)
