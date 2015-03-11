@@ -77,7 +77,7 @@ gulp.task('fonts', function () {
 // Compile and automatically prefix stylesheets
 gulp.task('styles', function () {
   return gulp.src('app/styles/main.less')
-    .pipe($.changed('styles', {extension: '.less'}))
+    .pipe($.changed('styles', { extension: '.less' }))
     .pipe($.less())
     .pipe($.autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
     .pipe(gulp.dest('.tmp/styles'));

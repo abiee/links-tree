@@ -11,6 +11,15 @@ import LinksTree from './LinksTree';
 var app = express();
 app.use(morgan('dev'));
 
+// Allow CORS
+app.use(function(req, res, next) {
+  'use strict';
+
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
+
 var database = new Database();
 var linksTree = new LinksTree(database);
 
