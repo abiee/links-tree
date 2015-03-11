@@ -225,9 +225,7 @@ gulp.task('tdd:server', ['test:server'], function() {
 });
 
 // Run development server environmnet
-gulp.task('serve', ['webpack', 'run:server', 'connect', 'watch'], function () {
-  require('opn')('http://localhost:9000');
-});
+gulp.task('serve', ['webpack', 'run:server', 'connect', 'watch']);
 
 // Watch files for changes & reload
 gulp.task('watch', ['connect'], function () {

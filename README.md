@@ -25,7 +25,7 @@ Acceptable if the page has to be refreshed when new links are found, extra point
 
 Notes
 -----
-The server fetchs the target site every 5 minuts. You should wait until the server cache for the first time.
+The server fetchs the target site every 5 minuts. You should wait until the server cache for the first time. It follow links at second level.
 
 Setup
 -----
