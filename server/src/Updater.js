@@ -8,7 +8,7 @@ const SEG = 1000;
 
 export default class Updater {
   constructor(url, depth, database) {
-    this.updateTime = 5 * SEG;
+    this.updateTime = 5 * 60 * SEG;
     this.url = url;
     this.depth = depth;
     this.database = database;
@@ -26,6 +26,8 @@ export default class Updater {
     logger.log('info', '[Updater] Refreshing ' + this.url);
     var crawler = this.getLinksCrawler();
     var self = this;
+
+    this.eventEmitter.emit('fetching');
 
     crawler.start(this.depth).on('done', function(result) {
       var pendingUrls = 0;

@@ -1,0 +1,10 @@
+<p>
+  {{#if  lastDateUpdated}}
+    Last time fetch data from server was <strong>{{ lastDateUpdated }}</strong>
+    {{#if lastDateChanged}}
+    and last time data changed was <strong>{{ lastDateChanged }}</strong>
+    {{/if}}
+  {{else}}
+    Never fetched data from server
+  {{/if}}
+</p>

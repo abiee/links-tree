@@ -11,6 +11,9 @@ import Updater from './Updater';
 
 var database = new Database();
 var linksTree = new LinksTree(database);
+var lastDateUpdated = null;
+var lastDateChanged = null;
+
 var app = express();
 app.use(morgan('dev'));
 
@@ -32,15 +35,19 @@ app.get('/api/tree', function(req, res) {
     });
 });
 
-var server = http.createServer(app).listen(3000, function() {
+app.get('/api/statistics', function(req, res) {
   'use strict';
 
-  logger.info('Express server started!');
+  res.json({
+    lastDateUpdated: lastDateUpdated,
+    lastDateChanged: lastDateChanged
+  });
 });
 
+var server = http.createServer(app);
 var io = socketio(server);
-
 var updater = new Updater(config.url, config.defaultDepth, database);
+
 updater.start()
   .on('modified', function(url) {
     'use strict';
@@ -58,7 +65,17 @@ updater.start()
     'use strict';
     if (hasChange) {
       logger.log('verbose', '[Updater] Something change, dropping cache');
+      lastDateChanged = new Date();
       database.uncahe(config.url);
       io.sockets.emit('updated', 'everyone');
     }
+
+    lastDateUpdated = new Date();
+    io.sockets.emit('fetched', 'everyone');
+  })
+  .once('done', function() {
+    'use strict';
+    server.listen(3000, function() {
+      logger.info('Express server started!');
+    });
   });
