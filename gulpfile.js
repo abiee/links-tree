@@ -45,7 +45,11 @@ var DevWebpackCompiler = (function() {
 
 // Lint Javascript
 gulp.task('jshint', function () {
-  return gulp.src(['app/scripts/**/*.js', '!app/scripts/vendor/**/*.js'])
+  return gulp.src([
+      'app/scripts/**/*.js',
+      'server/src/**/*.js',
+      '!app/scripts/vendor/**/*.js'
+  ])
     .pipe($.jshint({ lookup: true }))
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
@@ -133,7 +137,7 @@ gulp.task('connect', ['styles'], function () {
 
 // Compile express server to ECMAScript 5
 gulp.task('server:build', function() {
-  return gulp.src('server/src/*.js')
+  return gulp.src('server/src/**/*.js')
     .pipe($.babel({blacklist: ['useStrict'], modules: 'common'}))
     .pipe(gulp.dest('server/dist'));
 });
@@ -205,6 +209,19 @@ gulp.task('test', function(callback) {
       outputFile: '.tmp/test-results.xml',
     }
   }, callback);
+});
+
+// Perform server tests
+gulp.task('test:server', function() {
+  var files = ['server/test/setup.js', 'server/test/unit/**/*.spec.js'];
+
+  require('babel/register')({ modules: 'common' });
+  return gulp.src(files, { read: false })
+    .pipe($.mocha({ reporter: 'spec', growl: true }));
+});
+gulp.task('tdd:server', ['test:server'], function() {
+  gulp.watch('server/src/**/*.js', ['test:server']);
+  gulp.watch('server/test/**/*.js', ['test:server']);
 });
 
 // Run development server environmnet
