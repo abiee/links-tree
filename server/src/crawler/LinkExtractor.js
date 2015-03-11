@@ -10,7 +10,7 @@ export default class LinkExtractor {
 
     $('a').each(function(index, a) {
       let link = $(a).attr('href');
-      let text = $(a).text() || link;
+      let text = _.trim($(a).text()) || link;
 
       if (!_.isUndefined(link)) {
         urlsFound.push({
