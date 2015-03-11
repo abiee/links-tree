@@ -37,7 +37,7 @@ Clone the repository and install the dependencies.
     $ bower install
     $ gulp serve
 
-Do not forget to install globally gulp and bower if not installed yet.
+Open your browser and use the url http://localhost:9000/ to see the project working. Do not forget to install globally gulp and bower if not installed yet.
 
 Testing
 ---------
