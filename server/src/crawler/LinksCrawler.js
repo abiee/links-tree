@@ -108,7 +108,6 @@ export default class LinksCrawler {
   }
 
   canonizeUrls(links) {
-    var counter = 0;
     _.forEach(links, _.bind(function(item) {
       item.link = this.appendRootUrlIfNecessary(item.link);
     }, this));
