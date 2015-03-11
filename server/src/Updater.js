@@ -8,7 +8,7 @@ const SEG = 1000;
 
 export default class Updater {
   constructor(url, depth, database) {
-    this.updateTime = 5 * 60 * SEG;
+    this.updateTime = 5 * SEG;
     this.url = url;
     this.depth = depth;
     this.database = database;
@@ -32,7 +32,7 @@ export default class Updater {
       var changed = false;
 
       _.forOwn(result, function(links, url) {
-        pendingUrls += 1
+        pendingUrls += 1;
 
         self.database.get(url, function(databaseLinks) {
           pendingUrls -= 1;

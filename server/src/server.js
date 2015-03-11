@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import socketio from 'socket.io';
 import http from 'http';
 
 import config from './config';
@@ -8,6 +9,8 @@ import Database from './Database';
 import LinksTree from './LinksTree';
 import Updater from './Updater';
 
+var database = new Database();
+var linksTree = new LinksTree(database);
 var app = express();
 app.use(morgan('dev'));
 
@@ -20,8 +23,23 @@ app.use(function(req, res, next) {
   next();
 });
 
-var database = new Database();
-var linksTree = new LinksTree(database);
+app.get('/api/tree', function(req, res) {
+  'use strict';
+
+  linksTree.getLinksTree(config.url)
+    .on('done', function(tree) {
+      res.json(tree);
+    });
+});
+
+var server = http.createServer(app).listen(3000, function() {
+  'use strict';
+
+  logger.info('Express server started!');
+});
+
+var io = socketio(server);
+
 var updater = new Updater(config.url, config.defaultDepth, database);
 updater.start()
   .on('modified', function(url) {
@@ -41,20 +59,6 @@ updater.start()
     if (hasChange) {
       logger.log('verbose', '[Updater] Something change, dropping cache');
       database.uncahe(config.url);
+      io.sockets.emit('updated', 'everyone');
     }
   });
-
-app.get('/api/tree', function(req, res) {
-  'use strict';
-
-  linksTree.getLinksTree(config.url)
-    .on('done', function(tree) {
-      res.json(tree);
-    });
-});
-
-http.createServer(app).listen(3000, function() {
-  'use strict';
-
-  logger.info('Express server started!');
-});

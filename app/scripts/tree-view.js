@@ -7,10 +7,15 @@ export default class TreeView extends Marionette.ItemView {
     this.className = 'showback';
     this.template = treeViewTemplate;
     this.ui = { tree: '#links-tree' };
+    this.modelEvents = { change: 'buildTree' };
     super(...rest);
   }
 
   onShow() {
+    this.buildTree();
+  }
+
+  buildTree() {
     this.ui.tree.jstree({
       core: {
         data: this.model.toJSON().children

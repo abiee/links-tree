@@ -1,4 +1,4 @@
 export default {
-  url: 'http://www.informador.com.mx/',
+  url: 'http://localhost:8000/',
   defaultDepth: 2
 };
