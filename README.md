@@ -23,6 +23,10 @@ Technical requirements
 
 Acceptable if the page has to be refreshed when new links are found, extra points if the refresh happens without user interaction.
 
+Notes
+-----
+The server fetchs the target site every 5 minuts. You should wait until the server cache for the first time.
+
 Setup
 -----
 Clone the repository and install the dependencies.
