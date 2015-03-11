@@ -32,10 +32,16 @@ updater.start()
     'use strict';
     logger.log('verbose', '[Updater] New link found and indexed ' + url);
   })
-  .on('changed', function() {
+  .on('changed', function(url) {
     'use strict';
-    logger.log('verbose', '[Updater] Something change, dropping cache');
-    database.uncahe(config.url);
+    logger.log('verbose', '[Updater] Change detected on ' + url);
+  })
+  .on('done', function(hasChange) {
+    'use strict';
+    if (hasChange) {
+      logger.log('verbose', '[Updater] Something change, dropping cache');
+      database.uncahe(config.url);
+    }
   });
 
 app.get('/api/tree', function(req, res) {
