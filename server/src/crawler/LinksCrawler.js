@@ -1,14 +1,15 @@
 import events from 'events';
 import url from 'url';
 import _ from 'lodash';
+import LinkExtractor from './LinkExtractor';
 
 var DEFAULT_DEPTH = 2;
 
 export default class LinksCrawler {
-  constructor(urlRoot, crawler, linkExtractor) {
+  constructor(urlRoot, crawler) {
     this.urlRoot = urlRoot;
     this.crawler = crawler;
-    this.linkExtractor = linkExtractor;
+    this.linkExtractor = new LinkExtractor();
   }
 
   start(depth) {

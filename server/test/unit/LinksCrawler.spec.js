@@ -1,11 +1,9 @@
 import fixtures from './fixtures';
 import WebCrawlerMock from './mock/WebCrawlerMock';
-import LinkExtractor from '../../src/crawler/LinkExtractor';
 import LinksCrawler from '../../src/crawler/LinksCrawler';
 
 describe('LinksCrawler', function() {
   beforeEach(function() {
-    this.linkExtractor = new LinkExtractor();
     this.webCrawler = new WebCrawlerMock();
 
     this.webCrawler.setResult('http://empty.com/', fixtures.emptyPage);
@@ -16,9 +14,7 @@ describe('LinksCrawler', function() {
   });
 
   it('returns the url name an its links', function(done) {
-    var crawler = new LinksCrawler('http://empty.com/',
-                                   this.webCrawler,
-                                   this.linkExtractor);
+    var crawler = new LinksCrawler('http://empty.com/', this.webCrawler);
     crawler.start()
       .once('crawled', function(url, links) {
         try {
@@ -33,9 +29,7 @@ describe('LinksCrawler', function() {
   });
 
   it('gets all the urls in the root page', function(done) {
-    var crawler = new LinksCrawler('http://example.com/',
-                                   this.webCrawler,
-                                   this.linkExtractor);
+    var crawler = new LinksCrawler('http://example.com/', this.webCrawler);
 
     crawler.start()
       .once('crawled', function(url, links) {
@@ -51,10 +45,7 @@ describe('LinksCrawler', function() {
   });
 
   it('follows second level links', function(done) {
-    var linkExtractor = new LinkExtractor('http://example.com/');
-    var crawler = new LinksCrawler('http://example.com/',
-                                   this.webCrawler,
-                                   linkExtractor);
+    var crawler = new LinksCrawler('http://example.com/', this.webCrawler);
 
     var expectedCrawledUrls = [
       'http://example.com/',
