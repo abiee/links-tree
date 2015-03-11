@@ -2,7 +2,10 @@ import events from 'events';
 import url from 'url';
 import _ from 'lodash';
 import config from '../config';
+import logger from '../logger';
 import LinkExtractor from './LinkExtractor';
+
+var urlPat = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?.*)?$/;
 
 export default class LinksCrawler {
   constructor(urlRoot, crawler) {
@@ -14,6 +17,9 @@ export default class LinksCrawler {
   start(depth) {
     var eventEmitter = new events.EventEmitter();
     depth = depth || config.defaultDepth;
+
+    logger.log('debug', '[LinksCrawler] Will fetch ' + this.urlRoot + ' ' +
+                        'with a depth of ' + depth);
 
     this.pendingUrlsToFollow = 1;
     this.pickedUrls = [this.urlRoot];
@@ -37,11 +43,15 @@ export default class LinksCrawler {
       // If no more pendiing urls to fetch, we're done
       if (this.pendingUrlsToFollow > 0) {
         depth -= 1;
+        logger.log('debug', '[LinksCrawler] Still ' + 
+                            this.pendingUrlsToFollow + ' links to check');
 
         linksToFollow.forEach(_.bind(function(pendingUrl) {
           this.crawlUrl(pendingUrl, depth, eventEmitter, crawledUrls);
         }, this));
       } else {
+        logger.log('verbose', '[LinkCrawler] All links followed. ' + 
+                              'Finished successfully');
         eventEmitter.emit('done', crawledUrls);
       }
     }, this));
@@ -49,12 +59,22 @@ export default class LinksCrawler {
 
   fetchLinks(url, depth, callback) {
     this.crawler.fetch(url).on('done', _.bind(function(error, url, result, $) {
-      var linksFound = this.extractUrls($);
-      var linksToFollow = [];
+      if (!$) { // Ignore links that are not html
+        callback(url, [], []);
+        return;
+      }
 
+      logger.log('verbose', '[LinksCrawler] Extracting links of ' + url);
+      var linksFound = this.extractUrls($);
+
+      var linksToFollow = [];
       if (depth > 1) {
         linksToFollow = this.getLinksToFollow(linksFound);
       }
+
+      logger.log('verbose', '[LinksCrawler] ' + linksFound.length + ' ' +
+                            'links found and ' + linksToFollow.length + ' ' +
+                            'will be followed in ' + url);
 
       callback(url, linksFound, linksToFollow);
     }, this));

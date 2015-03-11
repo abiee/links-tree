@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import http from 'http';
 
 import config from './config';
+import logger from './logger';
 import Database from './Database';
 import LinksTree from './LinksTree';
 
@@ -35,5 +36,5 @@ app.get('/api/tree', function(req, res) {
 http.createServer(app).listen(3000, function() {
   'use strict';
 
-  console.log('Express server started!');
+  logger.info('Express server started!');
 });
