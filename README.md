@@ -1,64 +1,45 @@
-ES6 Marionette project
+Links tree
 ======================
-Looking for boilerplate projects to start working with ECMAScript 6 I didn't found a project that fit my requirements, so I take the best part of other projects and put all together here. This project can be used to bootstrap new projects with ECMAScript 6 support.
+Project created for a job application, requirements are described below.
 
-This is an implementation of [Clean ES6 Project](https://github.com/abiee/clean-es6-project) integrating Backbone.Marionette to the stack.
-
-What's inside
+Requeriments
 ----------------
-Batteries included:
- - Gulp
- - Webpack
- - 6to5 Loader
- - Bootstrap
- - jQuery
- - Backbone
- - Marionette
- - Lodash instead Underscore
- - Handlebars
- - Less
- - Livereload
- - Karma
- - Mocha-Chai-Sinon
+As a product owner I would like to have a web crawler application that takes a given site (e.g. informador.com.mx) and lists the links contained there hierarchically; links contained in a second level page should also be included. This is to be replicated ad infinitum as long as the links i within the original domain.
 
-Includes Marionette shim for Marionette.Radio instead Wreqr. See: [Deprecation notes](http://marionettejs.com/docs/v2.3.1/marionette.application.html#the-application-channel) and [Backbone.Radio documentation](https://github.com/marionettejs/backbone.radio#using-with-marionette).
+Acceptance criteria
+-------------------
+ - List item
+ - Links are listed in a tree structure
+ - Webcrawler updates the page regularly while still looking for new links
+ - Links listed should only be links that point to a different page than the one that it lives on (e.g. anchor links that point to a given section within the same page are to be excluded)
+ - Any element that has links that point to a different page should also be included (e.g. images with links)
+ - Only list links to external sites as a one shot, the crawler should not list secondary links within that external site (e.g. if a link from informador.com.mx points to espn.com list this link in the hierarchy, but don't show more links under espn.com )
+
+Technical requirements
+----------------------
+ - The web crawler should be constructed using node.js
+ - The output in the webpage should be a json that nests the links showing hierarchy
+ - The tree for the links should contain real time data
+
+Acceptable if the page has to be refreshed when new links are found, extra points if the refresh happens without user interaction.
 
 Setup
 -----
 Clone the repository and install the dependencies.
 
-    $ git clone https://github.com/abiee/es6-marionette.git my-project
-    $ cd my-project
+    $ git clone https://github.com/abiee/links-tree.git
+    $ cd links-tree
     $ npm install
     $ bower install
     $ gulp serve
 
-Do not forget to install globally gulp if not installed yet.
-
-Build
-------
-If you want to build the project run.
-
-    $ gulp build
-
-It will compile the project and put the result under `dist` directory. Note that bower dependencies are not included, tou can either copy or link the `bowe_components` directory into `dist`.
+Do not forget to install globally gulp and bower if not installed yet.
 
 Testing
 ---------
-Two options exists to run tests, the first one is for development process and aims to practice Test Driven Development.
+You can run server tests with test:server
 
-    $ gulp tdd
-
-It will open a Google Chrome instance and run all tests on it, when a file is updated tests will be run again. You can see the rests as a notification or in the console.
-The other option to run tests is for Continuous Integration purposes, it will run all the tests against PanthomJS and output a jUnit format file for analysis.
-    
-    $ gulp test
-
-You can get the results at `.tmp/test-results.xml`.
-
-Contribution
----------------
-If you have ideas or find an error feel free to submit a PR.
+    $ gulp test:server
 
 Licence
 -------

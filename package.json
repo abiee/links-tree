@@ -1,6 +1,6 @@
 {
-  "name": "project-name",
-  "version": "0.0.0",
+  "name": "links-tree",
+  "version": "0.0.1",
   "dependencies": {
     "backbone": "^1.1.2",
     "backbone.marionette": "^2.4.1",
