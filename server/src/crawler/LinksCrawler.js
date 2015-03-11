@@ -67,6 +67,8 @@ export default class LinksCrawler {
       logger.log('verbose', '[LinksCrawler] Extracting links of ' + url);
       var linksFound = this.extractUrls($);
 
+      this.canonizeUrls(linksFound);
+
       var linksToFollow = [];
       if (depth > 1) {
         linksToFollow = this.getLinksToFollow(linksFound);
@@ -103,5 +105,27 @@ export default class LinksCrawler {
 
     var parsedUrl = url.parse(link);
     return parsedUrl.host === this.hostFilter;
+  }
+
+  canonizeUrls(links) {
+    var counter = 0;
+    _.forEach(links, _.bind(function(item) {
+      item.link = this.appendRootUrlIfNecessary(item.link);
+    }, this));
+  }
+
+  appendRootUrlIfNecessary(url) {
+    if (!url.match(urlPat)) {
+      var urlRoot = _.trimRight(this.urlRoot, ' /');
+
+      // Relative urls must start with /
+      if (url[0] !== '/') {
+        url = '/' + url;
+      }
+
+      url = urlRoot + url;
+    }
+
+    return url;
   }
 }

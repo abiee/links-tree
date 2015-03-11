@@ -66,4 +66,26 @@ describe('LinksCrawler', function() {
         }
       });
   });
+
+  describe('#appendRootUrlIfNecessary', function() {
+    it('is not necessary for valid urls', function() {
+      var crawler = new LinksCrawler('http://example.com/', this.webCrawler);
+
+      expect(crawler.appendRootUrlIfNecessary('http://example.com/'))
+        .to.be.equal('http://example.com/');
+      expect(crawler.appendRootUrlIfNecessary('https://example.com/'))
+        .to.be.equal('https://example.com/');
+      expect(crawler.appendRootUrlIfNecessary('example.com'))
+        .to.be.equal('example.com');
+    });
+
+    it('appends host and protocol when necessary', function() {
+      var crawler = new LinksCrawler('http://example.com/', this.webCrawler);
+
+      expect(crawler.appendRootUrlIfNecessary('/something'))
+        .to.be.equal('http://example.com/something');
+      expect(crawler.appendRootUrlIfNecessary('something'))
+        .to.be.equal('http://example.com/something');
+    })
+  });
 });

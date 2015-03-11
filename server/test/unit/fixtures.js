@@ -54,7 +54,7 @@ var exampleComSomething = `<html>
         That's clear. <a href="http://www.google.com/">Your cells </a>
         react to bacteria and viruses differently than mine. You don't get 
         <a href="http://example.com/something-3">sick</a>, I do. That's 
-        also clear. <a href="http://example.com/something-4">But for some
+        also clear. <a href="/something-4">But for some
         reason</a>, you and I react the exact same way to water. We swallow it
         too fast, we choke. We get some in our lungs, we drown. However unreal
         it may seem, we are connected, you and I. We're on the same curve,
