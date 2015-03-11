@@ -27,4 +27,10 @@ describe('LinkExtractor', function() {
     var links = this.linkExtractor.extract($);
     expect(links).to.be.empty;
   });
+
+  it('uses a default text for the tag if not have any', function() {
+    var $ = cheerio.load('<a href="http://example.com"></a>');
+    var links = this.linkExtractor.extract($);
+    expect(links[0].text).to.equal('http://example.com');
+  });
 });
